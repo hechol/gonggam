@@ -33,3 +33,4 @@ build/
 .vscode/
 /src/main/resources/application-local.properties
 /src/main/resources/application-oauth.properties
+/src/main/resources/application-env.properties

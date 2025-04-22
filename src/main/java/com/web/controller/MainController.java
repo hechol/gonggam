@@ -31,8 +31,8 @@ public class MainController {
         String temp = env.getProperty("spring.datasource.url");
         log.info("temp={}", temp);
 
-        //temp = env.getProperty("spring.security.oauth2.client.registration.google.client-id");
-        //log.info("temp={}", temp);
+//        temp = env.getProperty("spring.security.oauth2.client.registration.google.client-id");
+//        log.info("temp={}", temp);
 
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 2);
         Page<Request> requests = requestService.getMainPage(pageable);
