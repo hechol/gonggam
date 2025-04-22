@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+
+<div layout:fragment="content" style="margin-left:25%;margin-right:25%">
+    <div class="col-md-6 px-0">
+        <p class="lead my-3">[[${request.title}]]</p>
+        <p class="lead my-3">[[${request.content}]]</p>
+    </div>
+</div>
+
+</html>

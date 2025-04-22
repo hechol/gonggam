@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+
+<div layout:fragment="content">
+    <div class="row g-5">
+        <div class="col-md-6 col-lg-6 mx-auto">
+            <h4 class="mb-3 mx-auto">요청</h4>
+            <form role="form" method="post" enctype="multipart/form-data" th:object="${requestFormDto}">
+                <div class="vstack gap-2">
+                    <div class="col-md-2 mb-3">
+                        <label for="country" class="form-label">카테고리</label>
+                        <select th:field="*{requestCategory}" class="form-select" id="country" required="">
+                            <option value="DEV">개발</option>
+                            <option value="BUG">버그</option>
+                            <option value="TRANS">번역</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Please select a valid country.
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 mb-3">
+                        <label for="firstName" class="form-label">제목</label>
+                        <input th:field="*{title}" type="text" class="form-control" id="firstName" placeholder="" value="" required="">
+                        <div class="invalid-feedback">
+                            Valid first name is required.
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label for="address" class="form-label">내용</label>
+                        <textarea th:field="*{content}" class="form-control" rows="15" aria-label="With textarea" id="address" ></textarea>
+                        <div class="invalid-feedback">
+                            Please enter your shipping address.
+                        </div>
+                    </div>
+
+                    <button th:formaction="@{/request/new}" type="submit" class="w-25 btn btn-primary btn-lg mx-auto" >입력완료</button>
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</html>

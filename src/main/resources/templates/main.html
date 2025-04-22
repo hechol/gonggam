@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout1}">
+<div layout:fragment="content">
+    <div class="p-4 p-md-5 mb-4 rounded text-bg-dark">
+        <div class="col-md-6 px-0">
+            <h1 class="display-4 fst-italic">위기에 빠진 프로그래머를 도와주세요!</h1>
+            <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p>
+            <p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue reading...</a></p>
+        </div>
+    </div>
+
+    <table>
+        <th:block th:each="request, status: ${requests.getContent()}">
+            <tr>
+                <td class="table1">[[${request.requestCategory}]]</td>
+                <td class="table2">[[${request.title}]]</td>
+                <td class="table3">[[${request.content}]]</td>
+            </tr>
+        </th:block>
+    </table>
+
+    <div class="row">
+        <th:block th:each="request, status: ${requests.getContent()}">
+            <div class="col-12">
+                <div class="card">
+                    <a th:href="'/request/' +${request.id}" class="text-dark">
+                        <div class="card-body">
+                            <h4 class="card-title">[[${request.requestCategory}]]</h4>
+                            <p class="card-text">[[${request.title}]]</p>
+                            <h3 class="card-title text-danger">[[${request.content}]]</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </th:block>
+    </div>
+    <div th:with="start=${(requests.number/maxPage)*maxPage + 1}, end=(${(requests.totalPages == 0) ? 1 : (start + (maxPage - 1) < requests.totalPages ? start + (maxPage - 1) : requests.totalPages)})" >
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${requests.first}?'disabled'">
+                <a th:href="@{'/' + '?page=' + ${requests.number-1}}" aria-label='Previous' class="page-link">
+                    <span aria-hidden='true'>Previous</span>
+                </a>
+            </li>
+
+            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${requests.number eq page-1}?'active':''">
+                <a th:href="@{'/' +'?page=' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>
+            </li>
+
+            <li class="page-item" th:classappend="${requests.last}?'disabled'">
+                <a th:href="@{'/' + '?page=' + ${requests.number+1}}" aria-label='Next' class="page-link">
+                    <span aria-hidden='true'>Next</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+</html>
+

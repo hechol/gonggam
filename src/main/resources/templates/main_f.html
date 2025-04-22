@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="main_f" class="container">
+    <div class="p-4 p-md-5 mb-4 rounded text-bg-dark">
+        <div class="col-md-6 px-0">
+            <h1 class="display-4 fst-italic">위기에 빠진 프로그래머를 도와주세요!</h1>
+            <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p>
+            <p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue reading...</a></p>
+        </div>
+    </div>
+    <div class="row">
+        <th:block th:each="item, status: ${items.getContent()}">
+            <div class="col-12">
+                <div class="card">
+                    <a th:href="'/item/' +${item.id}" class="text-dark">
+                        <div class="card-body">
+                            <h4 class="card-title">[[${item.itemNm}]]</h4>
+                            <p class="card-text">[[${item.itemDetail}]]</p>
+                            <h3 class="card-title text-danger">[[${item.price}]]원</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </th:block>
+    </div>
+    <div th:with="start=${(items.number/maxPage)*maxPage + 1}, end=(${(items.totalPages == 0) ? 1 : (start + (maxPage - 1) < items.totalPages ? start + (maxPage - 1) : items.totalPages)})" >
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${items.number eq 0}?'disabled':''">
+                <a th:href="@{'/' + '?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number-1}}" aria-label='Previous' class="page-link">
+                    <span aria-hidden='true'>Previous</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${items.number eq page-1}?'active':''">
+                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>
+            </li>
+            <li class="page-item" th:classappend="${items.number+1 ge items.totalPages}?'disabled':''">
+                <a th:href="@{'/' +'?searchQuery=' + ${itemSearchDto.searchQuery} + '&page=' + ${items.number+1}}" aria-label='Next' class="page-link">
+                    <span aria-hidden='true'>Next</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+</html>
