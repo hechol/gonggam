@@ -3,58 +3,97 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}">
 <div layout:fragment="content">
-    <div class="p-4 p-md-5 mb-4 rounded text-bg-dark">
-        <div class="col-md-6 px-0">
-            <h1 class="display-4 fst-italic">위기에 빠진 프로그래머를 도와주세요!</h1>
-            <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and efficiently about what’s most interesting in this post’s contents.</p>
-            <p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue reading...</a></p>
-        </div>
-    </div>
 
-    <table>
-        <th:block th:each="request, status: ${requests.getContent()}">
-            <tr>
-                <td class="table1">[[${request.requestCategory}]]</td>
-                <td class="table2">[[${request.title}]]</td>
-                <td class="table3">[[${request.content}]]</td>
-            </tr>
-        </th:block>
-    </table>
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+        </script>
+    </th:block>
 
-    <div class="row">
-        <th:block th:each="request, status: ${requests.getContent()}">
-            <div class="col-12">
-                <div class="card">
-                    <a th:href="'/request/' +${request.id}" class="text-dark">
-                        <div class="card-body">
-                            <h4 class="card-title">[[${request.requestCategory}]]</h4>
-                            <p class="card-text">[[${request.title}]]</p>
-                            <h3 class="card-title text-danger">[[${request.content}]]</h3>
+    <th:block layout:fragment="css">
+        <style>
+            .board .row {
+                /* width: 100%; */
+                display: flex;
+                margin-left: 1em;
+                padding-right: 3em;
+                margin-top: 1em;
+            }
+
+            .board .left {
+                /* display: inline-block; */
+                width: 90%;
+                padding: 1em;
+                border: 1px solid #d1d3d8;
+                flex-shrink: 1;
+            }
+
+            .board .left .title {
+                font-size: 1.2rem;
+                font-weight: 700;
+                margin-top: 0.5rem;
+                margin-left: 0.5rem;
+                margin-bottom: 1em;
+            }
+
+            .board .left .userName {
+                font-size: 0.8rem;
+                font-weight: 700;
+                margin-top: 0.5rem;
+                margin-left: 0.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .board .right {
+                width: 10%;
+                min-width: 5em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                border: 1px solid #d1d3d8;
+            }
+
+        </style>
+    </th:block>
+
+    <button type="button" onclick="location.href='/board/register' ">글쓰기</button>
+    <ul class="board">
+        <th:block th:each="board, status: ${boards}">
+            <a th:href="@{|/board/read/${board.id}|}" class="text-dark">
+                <li class="row">
+                    <div class="left">
+                        <div class="title">[[${board.title}]]</div>
+                        <div class="writer">[[${board.writer}]]</div>
+                    </div>
+                    <div class="right">
+                        <div>
+                            <p>조회수</p>
+                            <p>100회</p>
                         </div>
-                    </a>
-                </div>
-            </div>
+                    </div>
+                </li>
+            </a>
         </th:block>
-    </div>
-    <div th:with="start=${(requests.number/maxPage)*maxPage + 1}, end=(${(requests.totalPages == 0) ? 1 : (start + (maxPage - 1) < requests.totalPages ? start + (maxPage - 1) : requests.totalPages)})" >
-        <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${requests.first}?'disabled'">
-                <a th:href="@{'/' + '?page=' + ${requests.number-1}}" aria-label='Previous' class="page-link">
-                    <span aria-hidden='true'>Previous</span>
-                </a>
-            </li>
+    </ul>
 
-            <li class="page-item" th:each="page: ${#numbers.sequence(start, end)}" th:classappend="${requests.number eq page-1}?'active':''">
-                <a th:href="@{'/' +'?page=' + ${page-1}}" th:inline="text" class="page-link">[[${page}]]</a>
-            </li>
+<!--    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">제목</th>
+                <th scope="col">작성자</th>
+                <th scope="col">작성일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+            </tr>
+        </tbody>
+    </table>-->
 
-            <li class="page-item" th:classappend="${requests.last}?'disabled'">
-                <a th:href="@{'/' + '?page=' + ${requests.number+1}}" aria-label='Next' class="page-link">
-                    <span aria-hidden='true'>Next</span>
-                </a>
-            </li>
-        </ul>
-    </div>
 </div>
 </html>
 

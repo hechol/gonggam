@@ -8,55 +8,11 @@
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">home</a>
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="/request/new" sec:authorize="isAuthenticated()" class="nav-link px-2 link-dark">요청 등록</a></li>
                     <li><a href="/oauth2/authorization/google" sec:authorize="isAnonymous()" class="nav-link px-2 link-dark">구글로그인</a></li>
                     <li><a href="/oauth2/authorization/naver" sec:authorize="isAnonymous()" class="nav-link px-2 link-dark">네이버로그인</a></li>
                 </ul>
-                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-                </form>
-                <div class="dropdown text-end">
-                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
-                    </a>
-                    <ul class="dropdown-menu text-small">
-                        <li><a class="dropdown-item" href="#">New project...</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li><a class="dropdown-item" href="#">Profile</a></li>
-                        <li><hr class="dropdown-divider"></li>
-<!--                        <li><a class="dropdown-item" href="/postlogout">로그아웃</a></li>-->
-                        <li>
-                            <form class="form-signin" method="post" action="/logout">
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                <button class="dropdown-item" type="submit">Log Out</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </div>
     </header>
-    <!--
-    <nav class="nav-scroller py-1 mb-2">
-        <nav class="nav d-flex">
-            <a class="p-2 link-secondary" href="/">홈마크3</a>
-            <a class="p-2 link-secondary" href="/admin/item/new" sec:authorize="isAuthenticated()">상품 등록</a>
-            <a class="p-2 link-secondary" href="/admin/items" sec:authorize="isAuthenticated()">상품 관리</a>
-            <a class="p-2 link-secondary" href="/cart" sec:authorize="isAuthenticated()">장바구니</a>
-            <a class="p-2 link-secondary" href="/orders" sec:authorize="isAuthenticated()">구매이력</a>
-            <a class="p-2 link-secondary" href="/oauth2/authorization/google" sec:authorize="isAnonymous()">구글로그인</a>
-            <a class="p-2 link-secondary" href="/oauth2/authorization/naver" sec:authorize="isAnonymous()">네이버로그인</a>
-            <a class="p-2 link-secondary" href="/logout" sec:authorize="isAuthenticated()">로그아웃</a>
-
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-                <form class="form-inline my-2 my-lg-0" th:action="@{/}" method="get">
-                    <input name="searchQuery" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
-            </div>
-        <nav>
-    </nav>
-    -->
 </div>
-
 </html>

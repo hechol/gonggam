@@ -22,7 +22,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        //http.csrf().disable()
+//        http.csrf().disable();
         //.headers().frameOptions().disable()
         //.loginPage("/members/login")
 
@@ -36,8 +36,9 @@ public class SecurityConfig {
             .deleteCookies("JSESSIONID");
 
         http.authorizeRequests()
-            .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile", "/members/login").permitAll()
-            // "/cartItem/**"
+//            .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile", "/members/login").permitAll()
+            .requestMatchers("/**").permitAll()
+                // "/cartItem/**"
             .requestMatchers("/api/v1/**").hasRole(Role.USER.name())
             .anyRequest().authenticated();
 

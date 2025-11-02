@@ -1,6 +1,7 @@
 package com.web.controller;
 
 import com.web.entity.Request;
+import com.web.service.BoardService;
 import com.web.service.RequestService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -22,24 +23,13 @@ import static org.hibernate.query.sqm.tree.SqmNode.log;
 @RequiredArgsConstructor
 public class MainController {
 
-    private final RequestService requestService;
+    private final BoardService boardService;
     private final Environment env;
 
     @GetMapping(value = "/")
-    public String main(Optional<Integer> page, Model model){
+    public String main(Model model){
 
-        String temp = env.getProperty("spring.datasource.url");
-        log.info("temp={}", temp);
-
-//        temp = env.getProperty("spring.security.oauth2.client.registration.google.client-id");
-//        log.info("temp={}", temp);
-
-        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 2);
-        Page<Request> requests = requestService.getMainPage(pageable);
-
-        model.addAttribute("requests", requests);
-        model.addAttribute("maxPage", 5);
-
+        model.addAttribute("boards", boardService.list());
         return "main";
     }
 
