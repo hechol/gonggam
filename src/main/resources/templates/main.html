@@ -1,66 +1,92 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layouts/layout1}">
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        function register() {
+            location.href='/board/register';
+        }
+
+        function alarmLogin(){
+            const myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+            myModal.show();
+        }
+    </script>
+</th:block>
+
+<th:block layout:fragment="css">
+    <style>
+        .board .board-row {
+            width: 100%;
+            display: flex;
+            margin-left: 1em;
+            padding-right: 1em;
+            margin-top: 1em;
+        }
+
+        .board-row .left {
+            flex-grow: 1;
+            padding: 1em;
+            border: 1px solid #d1d3d8;
+            box-sizing: border-box;
+        }
+
+        .board-row .left .title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            margin-left: 0.5rem;
+            margin-bottom: 1em;
+        }
+
+        .board-row .left .userName {
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            margin-left: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .board-row .right {
+            width: 5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #d1d3d8;
+        }
+
+    </style>
+</th:block>
+
 <div layout:fragment="content">
 
-    <th:block layout:fragment="script">
-        <script th:inline="javascript">
-        </script>
-    </th:block>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">알림</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    로그인이 필요합니다.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <th:block layout:fragment="css">
-        <style>
-            .board .row {
-                /* width: 100%; */
-                display: flex;
-                margin-left: 1em;
-                padding-right: 3em;
-                margin-top: 1em;
-            }
-
-            .board .left {
-                /* display: inline-block; */
-                width: 90%;
-                padding: 1em;
-                border: 1px solid #d1d3d8;
-                flex-shrink: 1;
-            }
-
-            .board .left .title {
-                font-size: 1.2rem;
-                font-weight: 700;
-                margin-top: 0.5rem;
-                margin-left: 0.5rem;
-                margin-bottom: 1em;
-            }
-
-            .board .left .userName {
-                font-size: 0.8rem;
-                font-weight: 700;
-                margin-top: 0.5rem;
-                margin-left: 0.5rem;
-                margin-bottom: 0.5rem;
-            }
-
-            .board .right {
-                width: 10%;
-                min-width: 5em;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-shrink: 0;
-                border: 1px solid #d1d3d8;
-            }
-
-        </style>
-    </th:block>
-
-    <button type="button" onclick="location.href='/board/register' ">글쓰기</button>
+    <button sec:authorize="isAuthenticated()" type="button" class="btn btn-outline-dark" onclick="register()">글쓰기</button>
+    <button sec:authorize="isAnonymous()" type="button" class="btn btn-outline-dark" onclick="alarmLogin()">글쓰기</button>
     <ul class="board">
         <th:block th:each="board, status: ${boards}">
             <a th:href="@{|/board/read/${board.id}|}" class="text-dark">
-                <li class="row">
+                <li class="board-row">
                     <div class="left">
                         <div class="title">[[${board.title}]]</div>
                         <div class="writer">[[${board.writer}]]</div>
@@ -95,5 +121,7 @@
     </table>-->
 
 </div>
-</html>
+
+
+
 

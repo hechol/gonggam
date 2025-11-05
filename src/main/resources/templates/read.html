@@ -1,65 +1,67 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}">
 
 <head>
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <th:block sec:authorize="isAuthenticated()">
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    </th:block>
 </head>
 
+<th:block layout:fragment="css">
+    <style>
+        .write-wrap {
+            margin: 1rem;
+        }
+
+        .write-wrap .title {
+            font-size: 1.6rem;
+
+            /* width: calc(100% - 2rem); */
+            width: 100%;
+            box-sizing: border-box;
+
+            padding: 2rem;
+            margin-bottom: 1rem;
+            /* margin-left: 1rem;
+            margin-right: 1rem; */
+
+            border: 1px solid #d1d3d8;
+        }
+
+        .write-wrap .content {
+            font-size: 1.6rem;
+
+            width: 100%;
+            height: 20rem;
+            box-sizing: border-box;
+
+            padding: 2rem;
+
+            border: 1px solid #d1d3d8;
+        }
+
+    </style>
+</th:block>
+
 <div layout:fragment="content">
-    <div class="row mt-3">
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    Board Read
-                </div>
-                <div class="card-body">
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">Bno</span>
-                        <input type="text" class="form-control" th:value="${dto.id}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">Title</span>
-                        <input type="text" class="form-control" th:value="${dto.title}" readonly>
-                    </div>
-
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">Content</span>
-                        <textarea class="form-control col-sm-5" rows="5" readonly>[[${dto.content}]]</textarea>
-                    </div>
-
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">Writer</span>
-                        <input type="text" class="form-control" th:value="${dto.writer}" readonly>
-                    </div>
-<!--/*
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">RegDate</span>
-                        <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
-                    </div>
-*/-->
-
-    <div class="my-4">
-        <div class="float-end">
-            <a th:href="|@{/board/list}|" class="text-decoration-none">
-                <button type="button" class="btn btn-primary">List</button>
-            </a>
-            <button type="button" class="btn btn-secondary" onclick="remove()">Remove</button>
-        </div>
+    <div class="write-wrap">
+        <div class="title">[[${dto.title}]]</div>
+        <div class="content">[[${dto.content}]]</div>
     </div>
 
+    <div class="my-4">
+        <a th:href="|@{/}|" class="text-decoration-none">
+            <button type="button" class="btn btn-outline-dark">목록</button>
+        </a>
 
-
-                </div><!--end card body-->
-
-
-
-            </div><!--end card-->
-        </div><!-- end col-->
-    </div><!-- end row-->
-
+        <th:block sec:authorize="isAuthenticated()">
+            <button type="button" class="btn btn-outline-dark" onclick="remove()">삭제</button>
+        </th:block>
+    </div>
 </div>
 
 
@@ -70,7 +72,7 @@
         var token = $("meta[name='_csrf']").attr("content");
 
         await fetch(`../remove/${id}`, {
-            method: "POST",
+            method: "DELETE",
             headers: {
                 [header]: token
               },

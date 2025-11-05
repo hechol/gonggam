@@ -31,6 +31,7 @@ public class SecurityConfig {
             .userService(customOAuth2UserService);
 
         http.logout()
+            .logoutRequestMatcher(new AntPathRequestMatcher("/members/logout"))
             .logoutSuccessUrl("/")
             .invalidateHttpSession(true)
             .deleteCookies("JSESSIONID");

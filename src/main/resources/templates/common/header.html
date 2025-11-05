@@ -3,16 +3,31 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <div th:fragment="header">
-    <header class="p-3 mb-3 border-bottom">
-        <div class="container">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">home</a>
-                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="/oauth2/authorization/google" sec:authorize="isAnonymous()" class="nav-link px-2 link-dark">구글로그인</a></li>
-                    <li><a href="/oauth2/authorization/naver" sec:authorize="isAnonymous()" class="nav-link px-2 link-dark">네이버로그인</a></li>
-                </ul>
-            </div>
-        </div>
+    <th:block layout:fragment="header-css">
+        <style>
+            header {
+                margin-left: 1em;
+                margin-top: 1em;
+                margin-bottom: 1em;
+            }
+
+            header .header-container {
+                display: flex;
+                gap: 5vw;
+                flex-direction: row;
+                padding: 1em;
+                border: 1px solid #d1d3d8;
+            }
+        </style>
+    </th:block>
+
+    <header>
+        <ul class="header-container">
+            <li><a href="/">home</a></li>
+            <li><a href="/oauth2/authorization/google" sec:authorize="isAnonymous()">구글로그인</a></li>
+            <li><a href="/oauth2/authorization/naver" sec:authorize="isAnonymous()">네이버로그인</a></li>
+            <li><a href="/members/logout" sec:authorize="isAuthenticated()">로그아웃</a></li>
+        </ul>
     </header>
 </div>
 </html>
