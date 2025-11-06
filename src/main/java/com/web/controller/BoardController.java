@@ -23,9 +23,10 @@ public class BoardController {
         return "register";
     }
 
+    @ResponseBody
     @PostMapping("/register")
 //    public String registerPost(BoardDto boardDto, BindingResult bindingResult, Model model){
-    public String registerPost(BoardDto boardDto, Model model){
+    public String registerPost(@RequestBody BoardDto boardDto, Model model){
 
 //            if(bindingResult.hasErrors()){
 //            return "register";
@@ -37,10 +38,9 @@ public class BoardController {
             id  = boardService.register(boardDto);
         } catch (Exception e){
             model.addAttribute("errorMessage", "요청 등록 중 에러가 발생하였습니다.");
-            return "register";
         }
 
-        return "redirect:/";
+        return "ok";
     }
 
     @GetMapping("/read/{id}")

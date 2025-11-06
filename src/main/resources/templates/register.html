@@ -4,18 +4,21 @@
       layout:decorate="~{layouts/layout1}">
 
 <head>
-    <title>Board Register</title>
+    <th:block sec:authorize="isAuthenticated()">
+        <meta name="_csrf" th:content="${_csrf.token}"/>
+        <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    </th:block>
 </head>
 
-
 <th:block layout:fragment="css">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
     <style>
+
         .write-wrap {
             margin: 1rem;
         }
 
         .write-wrap .title {
-            font-size: 1.6rem;
 
             /* width: calc(100% - 2rem); */
             width: 100%;
@@ -28,13 +31,13 @@
         }
 
         .write-wrap .content {
-            font-size: 1.6rem;
 
             width: 100%;
             height: 20rem;
             box-sizing: border-box;
 
             padding: 2rem;
+            font-size: 1em;
         }
 
     </style>
@@ -43,39 +46,73 @@
 
 <div layout:fragment="content">
 
-    <form th:action="@{/board/register}" method="post">
-        <div class="write-wrap">
-            <input class=title type="text" name="title" placeholder="제목을 입력해주세요.">
-            <textarea class=content name="content" placeholder="내용을 입력해주세요."></textarea>
-        </div>
-        <!--
-        <div class="input-group mb-3">
-            <span class="input-group-text">Title</span>
-            <input type="text" name="title" class="form-control" placeholder="Title">
-        </div>
+    <div class="write-wrap">
+        <input id="title" class=title type="text" name="title" placeholder="제목을 입력해주세요.">
+        <div id="editor" class="content">
+    </div>
 
-        <div class="input-group mb-3">
-            <span class="input-group-text">Content</span>
-            <textarea class="form-control col-sm-5" rows="5" name="content"></textarea>
+    <div class="my-4">
+        <div class="float-end">
+            <button id="submit" class="btn btn-outline-dark">등록</button>
         </div>
-
-        <div class="input-group mb-3">
-            <span class="input-group-text">Writer</span>
-            <input type="text" name="writer" class="form-control" placeholder="Writer">
-        </div>-->
-
-        <div class="my-4">
-            <div class="float-end">
-                <button type="submit" class="btn btn-outline-dark">등록</button>
-                <button type="reset" class="btn btn-outline-dark">초기화</button>
-            </div>
-        </div>
-    </form>
+    </div>
 
 </div>
 
 
-<script layout:fragment="script" th:inline="javascript">
+<th:block layout:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <script th:inline="javascript">
+
+        const quill = new Quill('#editor', {
+           theme: 'snow'
+         });
+
+        document.getElementById("submit").addEventListener("click", async () => {
+
+            var header = $("meta[name='_csrf_header']").attr("content");
+            var token = $("meta[name='_csrf']").attr("content");
+
+        const data = {
+            title: document.getElementById("title").value.trim(),
+            content: quill.root.innerHTML
+        };
+
+        if (!data.title || !data.content) {
+            alert("제목과 내용을 모두 입력해주세요.");
+            return;
+        }
+
+        // 버튼 비활성화 (중복 전송 방지)
+        const btn = document.getElementById("submit");
+        btn.disabled = true;
+        btn.textContent = "전송 중...";
+
+        try {
+            const res = await fetch("/board/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    [header]: token
+                  },
+                body: JSON.stringify(data)
+            });
+
+            if (!res.ok) {
+                throw new Error("서버 오류");
+            }else{
+
+            }
+
+            location.href='/';
+
+        } catch (err) {
+            alert("서버 응답이 없습니다.");
+        } finally {
+            btn.disabled = false;
+            btn.textContent = "전송";
+        }
+    });
 
     const errors = [[${errors}]]
     console.log(errors)
@@ -83,10 +120,10 @@
     let errorMsg = ''
 
     if(errors){
-      for (let i = 0; i < errors.length; i++) {
+        for (let i = 0; i < errors.length; i++) {
         errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`
-      }
-      alert(errorMsg)
+        }
+        alert(errorMsg)
     }
-
-</script>
+    </script>
+</th:block>
