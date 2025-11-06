@@ -40,6 +40,10 @@
             font-size: 1em;
         }
 
+        .button-wrap {
+            display: flex;
+        }
+
     </style>
 </th:block>
 
@@ -51,10 +55,10 @@
         <div id="editor" class="content">
     </div>
 
-    <div class="my-4">
-        <div class="float-end">
-            <button id="submit" class="btn btn-outline-dark">등록</button>
-        </div>
+    <div class="button-wrap">
+        <button id="revert" class="btn btn-outline-dark">불러오기</button>
+        <button id="save" class="btn btn-outline-dark">임시저장</button>        
+        <button id="submit" class="btn btn-outline-dark">등록</button>
     </div>
 
 </div>
@@ -67,6 +71,34 @@
         const quill = new Quill('#editor', {
            theme: 'snow'
          });
+        
+
+        document.getElementById("revert").addEventListener("click", async () => {
+
+            if (window.confirm("임시저장된 내용을 불러오시겠습니까?\n(현재 작성중인 내용은 삭제됩니다.)")) {
+
+                const title = localStorage.getItem("title");
+                if (title) {
+                    document.getElementById("title").value = title;
+                }
+                const content = localStorage.getItem("content");
+                if (content) {
+                    quill.root.innerHTML = content;
+                }           
+            }            
+        });
+
+        document.getElementById("save").addEventListener("click", async () => {
+            
+            const data = {
+                title: document.getElementById("title").value.trim(),
+                content: quill.root.innerHTML
+            };
+
+            localStorage.setItem("title", data.title);
+            localStorage.setItem("content", data.content);
+        });
+
 
         document.getElementById("submit").addEventListener("click", async () => {
 
@@ -88,6 +120,9 @@
         btn.disabled = true;
         btn.textContent = "전송 중...";
 
+        localStorage.setItem("title", data.title);
+        localStorage.setItem("content", data.content);
+
         try {
             const res = await fetch("/board/register", {
                 method: "POST",
@@ -103,6 +138,9 @@
             }else{
 
             }
+
+            localStorage.removeItem("title");
+            localStorage.removeItem("content");
 
             location.href='/';
 
