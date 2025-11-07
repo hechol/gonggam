@@ -4,12 +4,12 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/layout1}">
 
-<head>
-    <th:block sec:authorize="isAuthenticated()">
+<th:block sec:authorize="isAuthenticated()">
+    <th:block layout:fragment="csrf">
         <meta name="_csrf" th:content="${_csrf.token}"/>
         <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     </th:block>
-</head>
+</th:block>
 
 <th:block layout:fragment="css">
     <style>
