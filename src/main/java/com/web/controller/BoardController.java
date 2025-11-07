@@ -11,6 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("/board")
 @RequiredArgsConstructor
@@ -26,16 +28,16 @@ public class BoardController {
     @ResponseBody
     @PostMapping("/register")
 //    public String registerPost(BoardDto boardDto, BindingResult bindingResult, Model model){
-    public String registerPost(@RequestBody BoardDto boardDto, Model model){
+    public String registerPost(@RequestBody BoardDto boardDto, Principal principal, Model model){
 
 //            if(bindingResult.hasErrors()){
 //            return "register";
 //        }
 
-        Long id;
+        boardDto.setWriter(principal.getName());
 
         try {
-            id  = boardService.register(boardDto);
+            boardService.register(boardDto);
         } catch (Exception e){
             model.addAttribute("errorMessage", "요청 등록 중 에러가 발생하였습니다.");
         }
@@ -54,9 +56,14 @@ public class BoardController {
     }
 
     @DeleteMapping("/remove/{id}")
-    public void remove(@PathVariable("id") Long id) {
+    public void remove(@PathVariable("id") Long id, Principal principal) {
 
-        boardService.remove(id);
+        BoardDto boardDto = boardService.readOne(id);
+        if(principal.getName().equals(boardDto.getWriter())){
+            boardService.remove(id);
+        }else{
+//            boardService.remove(id);
+        }
 
     }
 
