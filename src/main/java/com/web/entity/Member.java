@@ -17,9 +17,12 @@ import java.time.LocalDateTime;
 public class Member extends BaseEntity {
 
     @Id
-    @Column(name="member_id")
+    @Column(name="id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(name = "member_id")
+    private String memberId;
 
     @Column(name = "oauth_id")
     private String oauthId;
@@ -35,7 +38,6 @@ public class Member extends BaseEntity {
     private String password;
 
     private String address;
-
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -69,6 +71,7 @@ public class Member extends BaseEntity {
     }
 
     public Member(String resourceServerName, String oauthId, String name, String email, Role role) {
+        this.memberId = resourceServerName + ":" + oauthId;
         this.resourceServerName = resourceServerName;
         this.oauthId = oauthId;
         this.name = name;
