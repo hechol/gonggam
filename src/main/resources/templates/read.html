@@ -14,7 +14,7 @@
 <th:block layout:fragment="css">
     <style>
         .write-wrap {
-            margin: 1rem;
+            /* margin: 1rem; */
         }
 
         .write-wrap .title {
@@ -24,7 +24,7 @@
             width: 100%;
             box-sizing: border-box;
 
-            padding: 2rem;
+            padding: 1rem;
             margin-bottom: 1rem;
             /* margin-left: 1rem;
             margin-right: 1rem; */
@@ -39,13 +39,31 @@
             height: 20rem;
             box-sizing: border-box;
 
-            padding: 2rem;
+            padding: 1rem;
 
             border: 1px solid #d1d3d8;
         }
 
     </style>
 </th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+    async function remove() {
+        id = [[${dto.id}]];
+        var header = $("meta[name='_csrf_header']").attr("content");
+        var token = $("meta[name='_csrf']").attr("content");
+
+        await fetch(`../remove/${id}`, {
+            method: "DELETE",
+            headers: {
+                [header]: token
+              },
+        });
+        location.href='/';
+    }
+    </script>
+</th:block>    
 
 <div layout:fragment="content">
     <div class="write-wrap">
@@ -65,20 +83,4 @@
 </div>
 
 
-<script layout:fragment="script" th:inline="javascript">
-    async function remove() {
-        id = [[${dto.id}]];
-        var header = $("meta[name='_csrf_header']").attr("content");
-        var token = $("meta[name='_csrf']").attr("content");
 
-        await fetch(`../remove/${id}`, {
-            method: "DELETE",
-            headers: {
-                [header]: token
-              },
-        });
-
-        location.href='/';
-    }
-
-</script>
