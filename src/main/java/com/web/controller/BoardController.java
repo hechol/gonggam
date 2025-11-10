@@ -2,7 +2,9 @@ package com.web.controller;
 
 import com.web.dto.BoardDto;
 import com.web.dto.RequestFormDto;
+import com.web.entity.Member;
 import com.web.service.BoardService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import java.security.Principal;
 public class BoardController {
 
     private final BoardService boardService;
+    private final HttpSession httpSession;
 
     @GetMapping("/register")
     public String registerGET(){
@@ -34,7 +37,8 @@ public class BoardController {
 //            return "register";
 //        }
 
-        boardDto.setWriter(principal.getName());
+        Member user = (Member) httpSession.getAttribute("user");
+        boardDto.setWriter(user);
 
         try {
             boardService.register(boardDto);
@@ -59,7 +63,7 @@ public class BoardController {
     public void remove(@PathVariable("id") Long id, Principal principal) {
 
         BoardDto boardDto = boardService.readOne(id);
-        if(principal.getName().equals(boardDto.getWriter())){
+        if(principal.getName().equals(boardDto.getWriter().getId().toString())){
             boardService.remove(id);
         }else{
 //            boardService.remove(id);

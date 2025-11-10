@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Table(name="member")
 @Getter @Setter
 @ToString
-public class Member extends BaseEntity {
+public class Member extends BaseTimeEntity {
 
     @Id
     @Column(name="id")
@@ -32,12 +32,7 @@ public class Member extends BaseEntity {
 
     private String name;
 
-    @Column(unique = true)
-    private String email;
-
     private String password;
-
-    private String address;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -75,7 +70,6 @@ public class Member extends BaseEntity {
         this.resourceServerName = resourceServerName;
         this.oauthId = oauthId;
         this.name = name;
-        this.email = email;
         this.role = role;
     }
 

@@ -1,5 +1,6 @@
 package com.web.dto;
 
+import com.web.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +20,7 @@ public class BoardDto {
 
     private String content;
 
-    private String writer;
+    private Member writer;
 
     private LocalDateTime regDate;
 

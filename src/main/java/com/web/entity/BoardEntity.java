@@ -5,7 +5,7 @@ import lombok.*;
 
 @Entity
 @Getter
-public class BoardEntity extends BaseEntity{
+public class BoardEntity extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,8 +16,8 @@ public class BoardEntity extends BaseEntity{
     @Column(length = 2000)
     private String content;
 
-    @Column(length = 50)
-    private String writer;
+    @ManyToOne
+    private Member writer;
 
 //    long writer2;
 
