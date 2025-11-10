@@ -77,6 +77,6 @@ public class OAuthAttributes {
     }*/
 
     public Member toEntity() {
-        return new Member(resourceServerName, oauthId, name, email, Role.ADMIN);
+        return new Member(resourceServerName, oauthId, name, email, Role.USER);
     }
 }
