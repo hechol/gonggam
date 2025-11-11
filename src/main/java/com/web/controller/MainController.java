@@ -1,22 +1,13 @@
 package com.web.controller;
 
-import com.web.entity.Request;
 import com.web.service.BoardService;
-import com.web.service.RequestService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
-
-import java.util.Optional;
-
-import static org.hibernate.query.sqm.tree.SqmNode.log;
 
 @Slf4j
 @Controller

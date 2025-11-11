@@ -1,17 +1,13 @@
 package com.web.controller;
 
 import com.web.dto.BoardDto;
-import com.web.dto.RequestFormDto;
 import com.web.entity.Member;
 import com.web.service.BoardService;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 
