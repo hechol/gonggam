@@ -5,6 +5,20 @@
 <div th:fragment="header">
     <th:block layout:fragment="header-css">
         <style>
+            :root {
+                --light-blue: #4db1ec;
+                --blue: #1665cc;
+                --purple: #b473bf;
+                --pink: #ffb2c1;
+                --orange: #ff9f67;
+                --yellow: #ffd673;
+                --light-green: #a2e29b;
+                --green: #00a2af;
+                --grey: #333;
+                --white: #fff;
+            }
+
+            
             header {
                 margin-top: 1em;
                 margin-bottom: 1em;
@@ -17,16 +31,85 @@
                 padding: 1em;
                 border: 1px solid #d1d3d8;
             }
+
+            .btn-menu {
+                position: absolute;
+                right: 12px;
+            }
+            
+            .dimmed {
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 1;
+                width: 0%;
+                height: 100%;
+                background: rgba(0,0,0,.5)
+            }
+            .dimmed.open-menu {
+                width: 100%;
+            }
+
+            .dimmed .main-nav {
+                background: var(--grey);
+                width: 0;
+                height: 100%;
+                position: absolute;
+                z-index: 2;
+                right: 0;
+                transition: .5s;
+            }
+            .dimmed .main-nav.open-menu {
+                width: 70%;
+            }
+            .dimmed .main-nav li {
+                margin-bottom: 0.5rem;
+            }
+            .dimmed .main-nav a {
+                color: var(--white);
+                font-size: 1.5rem;
+            }
         </style>
-    </th:block>
+    </th:block>    
 
     <header>
         <ul class="header-container">
             <li><a href="/">home</a></li>
             <li><a href="/oauth2/authorization/google" sec:authorize="isAnonymous()">구글로그인</a></li>
             <li><a href="/oauth2/authorization/naver" sec:authorize="isAnonymous()">네이버로그인</a></li>
-            <li><a href="/members/logout" sec:authorize="isAuthenticated()">로그아웃</a></li>
+            <li><a href="/members/logout" sec:authorize="isAuthenticated()">로그아웃</a></li>     
         </ul>
+        <button class="btn-menu">add</button>     
+        <div class="dimmed">
+            <ul class="main-nav">
+                <!-- <li><button class="btn-menu2">delete</button></li> -->
+                <li><a th:href="@{/(boardtype=gonggam)}">gonggam게시판</a></li>
+                <li><a th:href="@{/(boardtype=request)}">건의게시판</a></li>
+            </ul>                    
+        </div>     
+        <script th:inline="javascript">
+        const btn = document.querySelector('.btn-menu');
+        const btn2 = document.querySelector('.btn-menu2');
+        const nav = document.querySelector('.main-nav');
+        const dimmed = document.querySelector('.dimmed');
+
+        btn.addEventListener('click', () => {
+            dimmed.classList.add('open-menu');
+            nav.classList.add('open-menu');
+            // if (btn.innerHTML === 'Menu') {
+            //     btn.innerHTML = 'Close';
+            // } else {
+            //     btn.innerHTML = 'Menu';
+            // }
+        });
+        dimmed.addEventListener('click', () => {
+            dimmed.classList.remove('open-menu');    
+            nav.classList.remove('open-menu');        
+        });
+    </script>
     </header>
+
+    
+
 </div>
 </html>

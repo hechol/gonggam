@@ -6,8 +6,10 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
+        const boardtype = [[${boardType}]]
+
         function register() {
-            location.href='/board/register';
+            location.href=`/board/register/${boardtype}`;
         }
 
         function alarmLogin(){
@@ -35,6 +37,7 @@
 
         .board-row .left {
             flex-grow: 1;
+            flex-shrink: 2;
             padding: 1em;
             border: 1px solid #d1d3d8;
             box-sizing: border-box;
@@ -57,6 +60,7 @@
         }
 
         .board-row .right {
+            flex-shrink: 0;
             width: 5em;
             display: flex;
             align-items: center;

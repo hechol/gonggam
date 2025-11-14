@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
@@ -18,9 +19,10 @@ public class MainController {
     private final Environment env;
 
     @GetMapping(value = "/")
-    public String main(Model model){
+    public String main(@RequestParam(defaultValue = "gonggam") String boardtype, Model model){
 
-        model.addAttribute("boards", boardService.list());
+        model.addAttribute("boardType", boardtype);
+        model.addAttribute("boards", boardService.list(boardtype));
         return "main";
     }
 

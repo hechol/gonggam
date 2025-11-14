@@ -19,8 +19,9 @@ public class BoardController {
     private final BoardService boardService;
     private final HttpSession httpSession;
 
-    @GetMapping("/register")
-    public String registerGET(){
+    @GetMapping("/register/{boardtype}")
+    public String registerGET(@PathVariable("boardtype") String boardtype, Model model){
+        model.addAttribute("boardType", boardtype);
         return "register";
     }
 

@@ -1,5 +1,6 @@
 package com.web.service;
 
+import com.web.constant.BoardCategory;
 import com.web.dto.BoardDto;
 import com.web.entity.BoardEntity;
 import com.web.repository.BoardRepository;
@@ -22,18 +23,20 @@ public class BoardService {
 
     public Long register(BoardDto boardDTO) {
 
-        BoardEntity board = modelMapper.map(boardDTO, BoardEntity.class);
+        BoardEntity board = boardDTO.toEntity(modelMapper);
 
         Long bno = boardRepository.save(board).getId();
 
         return bno;
     }
 
-    public List<BoardEntity> list() {
 
-        List<BoardEntity> all = boardRepository.findAll();
+    public List<BoardEntity> list(String boardtype) {
 
-        return all;
+
+        List<BoardEntity> boards = boardRepository.findByCategory(BoardCategory.valueOf(boardtype));
+
+        return boards;
     }
 
     public BoardDto readOne(Long id) {
@@ -42,7 +45,7 @@ public class BoardService {
 
         BoardEntity board = result.orElseThrow();
 
-        BoardDto boardDto = modelMapper.map(board, BoardDto.class);
+        BoardDto boardDto = board.toDto(modelMapper);
 
         return boardDto;
     }
