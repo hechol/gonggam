@@ -1,5 +1,6 @@
 package com.web.controller;
 
+import com.web.constant.BoardCategory;
 import com.web.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
@@ -19,7 +20,11 @@ public class MainController {
     private final Environment env;
 
     @GetMapping(value = "/")
-    public String main(@RequestParam(defaultValue = "gonggam") String boardtype, Model model){
+    public String main(@RequestParam(required = false) String boardtype, Model model){
+
+        if(boardtype == null){
+            boardtype= BoardCategory.gonggam.name();
+        }
 
         model.addAttribute("boardType", boardtype);
         model.addAttribute("boards", boardService.list(boardtype));
