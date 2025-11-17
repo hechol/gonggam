@@ -8,6 +8,7 @@ import com.web.dto.BoardDto;
 import com.web.entity.Member;
 import com.web.repository.MemberRepository;
 import com.web.service.BoardService;
+import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -141,7 +144,8 @@ class BoardTest {
         Long register = boardService.register(boardDTO);
 
         logout();
-        assertThatThrownBy(() -> mockMvc.perform(delete("/board/remove/" + register))).isInstanceOf(Exception.class);
+        ServletException exception = assertThrows(ServletException.class, () -> mockMvc.perform(delete("/board/remove/" + register)));
+        exception.getCause().printStackTrace();
         assert(boardService.list(BoardCategory.gonggam.name()).size() == 1);
     }
 
