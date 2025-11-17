@@ -6,9 +6,9 @@ import com.web.constant.BoardCategory;
 import com.web.constant.Role;
 import com.web.dto.BoardDto;
 import com.web.entity.Member;
-import com.web.repository.BoardRepository;
 import com.web.repository.MemberRepository;
 import com.web.service.BoardService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,7 +25,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.assertj.core.api.Assertions.*;
 
+@Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestSecurityConfig.class)
@@ -42,39 +44,54 @@ class BoardTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @Autowired
     MockHttpSession session;
 
     @Autowired
     MemberRepository userRepository;
 
-    BoardDto  boardDTO;
-
-    @BeforeEach
-    void setUp() {
+    Member createMember(){
         Member member = new Member();
         member.setRole(Role.USER);
-        Member savedMember = userRepository.save(member);
-        session.setAttribute("user", savedMember);
 
-        UserDetails user = User.builder()
-                .username(savedMember.getId().toString())
+        return userRepository.save(member);
+    }
+
+    void login(Member member){
+
+        session = new MockHttpSession();
+        session.setAttribute("user", member);
+
+        UserDetails userDetails = User.builder()
+                .username(member.getId().toString())
                 .password("")
-                .roles(savedMember.getRole().toString())
+                .roles(member.getRole().toString())
                 .build();
 
         Authentication auth = new UsernamePasswordAuthenticationToken(
-                user, user.getPassword(), user.getAuthorities());
+                userDetails, userDetails.getPassword(), userDetails.getAuthorities());
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(auth);
         SecurityContextHolder.setContext(context);
+    }
 
-        boardDTO = new BoardDto();
+    void logout(){
+        SecurityContextHolder.clearContext();
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
+        session.invalidate();
+    }
+
+    BoardDto createBoard(){
+        BoardDto boardDTO = new BoardDto();
         boardDTO.setCategory(BoardCategory.gonggam.name());
         boardDTO.setTitle("this is a title");
         boardDTO.setContent("this is a content");
-        boardDTO.setWriter(savedMember);
+        return boardDTO;
+    }
+
+    @BeforeEach
+    void setUp() {
+
     }
 
     @AfterEach
@@ -84,8 +101,13 @@ class BoardTest {
     @Test
     @Order(1)
     void register() {
+
         assert(boardService.list(BoardCategory.gonggam.name()).isEmpty());
 
+        Member member = createMember();
+        login(member);
+        BoardDto boardDTO = createBoard();
+        
         try {
             mockMvc.perform(post("/board/register").contentType(MediaType.APPLICATION_JSON)
                     .session(session)
@@ -98,16 +120,43 @@ class BoardTest {
     }
 
     @Test
-    void remove() {
+    void removeFailAnotherUser() throws Exception {
+        Member member = createMember();
+        login(member);
+        BoardDto boardDTO = createBoard();
+        Member member2 = createMember();
+        boardDTO.setWriter(member2);
+        Long register = boardService.register(boardDTO);
+
+        mockMvc.perform(delete("/board/remove/" + register));
+        assert(boardService.list(BoardCategory.gonggam.name()).size() == 1);
+    }
+
+    @Test
+    void removeFailLogout() throws Exception {
+        Member member = createMember();
+        login(member);
+        BoardDto boardDTO = createBoard();
+        boardDTO.setWriter(member);
+        Long register = boardService.register(boardDTO);
+
+        logout();
+        assertThatThrownBy(() -> mockMvc.perform(delete("/board/remove/" + register))).isInstanceOf(Exception.class);
+        assert(boardService.list(BoardCategory.gonggam.name()).size() == 1);
+    }
+
+    @Test
+    void removeSuccess() throws Exception {
+        Member member = createMember();
+        login(member);
+        BoardDto boardDTO = createBoard();
+        boardDTO.setWriter(member);
         Long register = boardService.register(boardDTO);
 
         assert(boardService.list(BoardCategory.gonggam.name()).size() == 1);
 
-        try {
-            mockMvc.perform(delete("/board/remove/" + register));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        mockMvc.perform(delete("/board/remove/" + register));
+
         assert(boardService.list(BoardCategory.gonggam.name()).isEmpty());
     }
 }

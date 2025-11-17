@@ -3,6 +3,7 @@ package com.web.entity;
 import com.web.constant.BoardCategory;
 import com.web.dto.BoardDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.modelmapper.ModelMapper;
 
@@ -25,6 +26,7 @@ public class BoardEntity extends BaseTimeEntity{
     private String content;
 
     @ManyToOne
+    @NotNull
     private Member writer;
 
     public void change(String title, String content){
