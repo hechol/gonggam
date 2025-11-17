@@ -56,8 +56,9 @@ public class BoardController {
         return "read";
     }
 
+    @ResponseBody
     @DeleteMapping("/remove/{id}")
-    public void remove(@PathVariable("id") Long id, Principal principal) {
+    public String remove(@PathVariable("id") Long id, Principal principal) {
 
         BoardDto boardDto = boardService.readOne(id);
         if(principal.getName().equals(boardDto.getWriter().getId().toString())){
@@ -65,6 +66,8 @@ public class BoardController {
         }else{
 //            boardService.remove(id);
         }
+
+        return "ok";
 
     }
 
